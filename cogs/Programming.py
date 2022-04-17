@@ -22,6 +22,27 @@ class Programming(commands.Cog):
 
     # contest information
     @commands.command(name='contest', aliases=['contestinfo'])
+    def ztoest(value):
+        d, t = value.split('T')
+        l = []
+        l2 = []
+        l = t.split(':')
+        l2 = d.split('-')
+        i2 = int(l2[2])
+        i = int(l[0])
+        i -= 4
+        if i < 0:
+            i += 24
+            i2 -= 1
+            l[0] = str(i)
+            l2[2] = str(i2)
+        else:
+            l[0] = str(i)
+
+        date = f'{l2[1]}-{l2[2]}-{l2[0]}'
+        time = f'{l[0]}:{l[1]} EST'
+        return date, time
+
     async def contest(self, ctx, *, site=''):
         """
         Get information about the current contest.
