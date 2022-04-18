@@ -3,14 +3,14 @@
 
 from discord.ext import commands
 import discord
-import config
+import setup
 import asyncio
 
 
 class Bot(commands.Bot):
     def __init__(self, **kwargs):
         super().__init__(command_prefix=commands.when_mentioned_or('$'), **kwargs)
-        for cog in config.cogs:
+        for cog in setup.cogs:
             try:
                 self.load_extension(cog)
             except Exception as exc:
@@ -25,7 +25,7 @@ async def main():
     intents = discord.Intents.default()
     intents.members = True
     bot = Bot(intents=intents)
-    await bot.start(config.token)
+    await bot.start(setup.token)
 
 if __name__ == '__main__':
     asyncio.run(main())

@@ -6,6 +6,7 @@ import requests
 import os
 import sys
 import datetime
+import pytz
 
 
 class Programming(commands.Cog):
@@ -15,7 +16,7 @@ class Programming(commands.Cog):
 
     cwd = os.getcwd()
     sys.path.append(f'{cwd}..')
-    from config import available_contests
+    from setup import available_contests
 
     def __init__(self, bot):
         self.bot = bot
