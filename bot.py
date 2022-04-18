@@ -5,6 +5,7 @@ from discord.ext import commands
 import discord
 import setup
 import asyncio
+import os
 
 
 class Bot(commands.Bot):
@@ -25,7 +26,7 @@ async def main():
     intents = discord.Intents.default()
     intents.members = True
     bot = Bot(intents=intents)
-    await bot.start(setup.token)
+    await bot.start(os.environ['TOKEN'])
 
 if __name__ == '__main__':
     asyncio.run(main())
