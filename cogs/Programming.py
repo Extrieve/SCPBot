@@ -48,16 +48,18 @@ class Programming(commands.Cog):
         est = pytz.timezone('US/Eastern')
         utc = pytz.utc
         # 2022-05-08T12:00:00.000Z format
-        fmt = '%Y-%m-%dT%H:%M:%S.000Z' if 'T' in convert else '%Y-%m-%d %H:%M:%S.000Z'
+        fmt = '%Y-%m-%dT%H:%M:%S.000Z'
 
         winter = datetime(2022, 1, 24, 18, 0, 0, tzinfo=utc)
         summer = datetime(2022, 7, 24, 18, 0, 0, tzinfo=utc)
 
-        start_time = datetime.strptime(convert, fmt)
+        try:
+            start_time = datetime.strptime(convert, fmt)
+        except ValueError:
+            start_time = datetime.strptime(convert.replace(' UTC', ''), '%Y-%m-%d %H:%M:%S')
         start_time = start_time.astimezone(est)
 
-        date, time = start_time.strftime(
-            '%Y-%m-%d'), str(start_time).split(' ')[1]
+        date, time = start_time.strftime('%Y-%m-%d'), str(start_time).split(' ')[1]
         difference = time.split('-')[-1]
         difference = int(difference.split(':')[0])
 
