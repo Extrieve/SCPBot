@@ -5,7 +5,7 @@ import discord
 import requests
 import os
 import sys
-import datetime
+from datetime import datetime
 import pytz
 
 
