@@ -20,29 +20,61 @@ class Programming(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # contest information
-    @commands.command(name='contest', aliases=['contestinfo'])
-    def ztoest(value):
-        d, t = value.split('T')
-        l = []
-        l2 = []
-        l = t.split(':')
-        l2 = d.split('-')
-        i2 = int(l2[2])
-        i = int(l[0])
-        i -= 4
-        if i < 0:
-            i += 24
-            i2 -= 1
-            l[0] = str(i)
-            l2[2] = str(i2)
-        else:
-            l[0] = str(i)
+    # # contest information
+    # @commands.command(name='contest', aliases=['contestinfo'])
+    # def ztoest(value):
+    #     d, t = value.split('T')
+    #     l = []
+    #     l2 = []
+    #     l = t.split(':')
+    #     l2 = d.split('-')
+    #     i2 = int(l2[2])
+    #     i = int(l[0])
+    #     i -= 4
+    #     if i < 0:
+    #         i += 24
+    #         i2 -= 1
+    #         l[0] = str(i)
+    #         l2[2] = str(i2)
+    #     else:
+    #         l[0] = str(i)
 
-        date = f'{l2[1]}-{l2[2]}-{l2[0]}'
-        time = f'{l[0]}:{l[1]} EST'
+    #     date = f'{l2[1]}-{l2[2]}-{l2[0]}'
+    #     time = f'{l[0]}:{l[1]} EST'
+    #     return date, time
+
+    def time_convert(self, convert):
+        est = pytz.timezone('US/Eastern')
+        utc = pytz.utc
+        # 2022-05-08T12:00:00.000Z format
+        fmt = '%Y-%m-%dT%H:%M:%S.000Z'
+
+        winter = datetime(2022, 1, 24, 18, 0, 0, tzinfo=utc)
+        summer = datetime(2022, 7, 24, 18, 0, 0, tzinfo=utc)
+
+        start_time = datetime.strptime(convert, fmt)
+
+        start_time = start_time.astimezone(est)
+
+        date, time = start_time.strftime(
+            '%Y-%m-%d'), str(start_time).split(' ')[1]
+        difference = time.split('-')[-1]
+        difference = int(difference.split(':')[0])
+
+        new_hour = int(time.split(':')[0]) - difference
+
+        time = time.split(':')
+        time[0] = str(new_hour)
+        time = ':'.join(time)
+
+        index = time.index('-') if '-' in time else time.index('+')
+        time = time[:index]
+
         return date, time
 
+    # contest information
+
+    @commands.command(name='contest', aliases=['contestinfo'])
     async def contest(self, ctx, *, site=''):
         """
         Get information about the current contest.
@@ -72,13 +104,10 @@ class Programming(commands.Cog):
         data = r.json()
         contests = []
         for entry in data:
-            start_time = entry['start_time']
-            end_time = entry['end_time']
-
-            # TODO: Change time format
-
+            start_d, start_t = self.time_convert(entry['start_time'])
+            end_d, end_t = self.time_convert(entry['end_time'])
             contests.append(
-                f'{entry["name"]} - {start_time} - {end_time} - {entry["url"]}')
+                f'{entry["name"]} - Day: {start_d} - Start: {start_t} - End: {end_t} - {entry["url"]}')
 
         # embed the contest data
         embed = discord.Embed(title=f'{" ".join([item.capitalize() for item in site.split("_")])}', description='\n'.join(
