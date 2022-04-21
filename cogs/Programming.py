@@ -93,6 +93,21 @@ class Programming(commands.Cog):
         data = r.json()
         return await ctx.send(data[0]['symbol'][0]['data'])
 
+    
+    # on raw reaction
+    @commands.Cog.listener()
+    async def on_raw_reaction_add(self, payload):
+        message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
+        if message.author.bot:
+            return
+
+        reaction = discord.utils.get(message.reactions, emoji='😎')
+        if not reaction:
+            return
+
+        # user = payload.member
+        return await self.qr(message.channel, message.content)
+
 
 def setup(bot):
     bot.add_cog(Programming(bot))
