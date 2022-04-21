@@ -82,8 +82,10 @@ class Programming(commands.Cog):
         """
         Generate a QR code from a given URL.
         """
+        if not qr_url:
+            return await ctx.send('You did not specify a URL.')
+            
         url = 'http://api.qrserver.com/v1/read-qr-code/?fileurl='
-        qr_url = 'https://media.discordapp.net/attachments/881610369318150228/966467287479631952/unknown.png'
 
         r = requests.get(url + qr_url)
         await ctx.send('Loading...')
