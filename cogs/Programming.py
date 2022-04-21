@@ -78,7 +78,7 @@ class Programming(commands.Cog):
 
     
     @commands.command(name='qr', aliases=['qrcode'])
-    async def qr(self, ctx, *, qr_url):
+    async def qr(self, ctx, qr_url):
         """
         Generate a QR code from a given URL.
         """
