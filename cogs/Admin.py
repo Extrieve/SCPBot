@@ -82,7 +82,7 @@ class Admin(commands.Cog):
     @commands.Cog.listener()
     async def on_member_join(self, member):
         """On member join, assign the member the default role."""
-        # Assign the member the role 'Normies'
+        # Auto assign role on join, TODO: Get available roles
         role = discord.utils.get(member.guild.roles, name='computer science')
         await member.add_roles(role)
 

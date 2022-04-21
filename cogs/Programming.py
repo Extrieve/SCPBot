@@ -76,6 +76,23 @@ class Programming(commands.Cog):
         embed.set_thumbnail(url=image)
         await ctx.send(embed=embed)
 
+    
+    @commands.command(name='qr', aliases=['qrcode'])
+    async def qr(self, ctx, *, qr_url):
+        """
+        Generate a QR code from a given URL.
+        """
+        url = 'http://api.qrserver.com/v1/read-qr-code/?fileurl='
+        qr_url = 'https://media.discordapp.net/attachments/881610369318150228/966467287479631952/unknown.png'
+
+        r = requests.get(url + qr_url)
+        await ctx.send('Loading...')
+        if r.status_code != (200 or 204):
+            return await ctx.send(f'Error: {r.status_code}')
+
+        data = r.json()
+        return await ctx.send(data[0]['symbol'][0]['data'])
+
 
 def setup(bot):
     bot.add_cog(Programming(bot))
