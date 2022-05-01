@@ -8,7 +8,7 @@ import sys
 from datetime import datetime
 import pytz
 import dateutil.parser
-
+import validators
 
 class Programming(commands.Cog):
     """The description for Programming goes here."""
@@ -82,13 +82,12 @@ class Programming(commands.Cog):
         """
         Generate a QR code from a given URL.
         """
-        if not qr_url:
-            return await ctx.send('You did not specify a URL.')
-            
-        url = 'http://api.qrserver.com/v1/read-qr-code/?fileurl='
+        if not validators.url(qr_url):
+            return await ctx.send('Please provide a valid URL', delete_after=5)
 
+        url = 'http://api.qrserver.com/v1/read-qr-code/?fileurl='
         r = requests.get(url + qr_url)
-        await ctx.send('Loading...')
+
         if r.status_code != (200 or 204):
             return await ctx.send(f'Error: {r.status_code}')
 
